@@ -16,14 +16,12 @@ router.route('/testimonials/random').get((req, res) => {
 });
 
 router.route('/testimonials/:id').get((req, res) => {
-  for (let i = 0; i < db.testimonials.length; i++) {
-    const item = db.testimonials[i];
-    if (item.id == req.params.id) {
-      res.json(item);
-      break;
-    }
+  const result = db.testimonials.filter(testimonial => testimonial.id == req.params.id);
+  if (result.length === 0) {
+    res.json({});
+  } else {
+    res.json(result[0]);
   }
-  res.json({});
 });
 
 router.route('/testimonials').post((req, res) => {
@@ -34,14 +32,17 @@ router.route('/testimonials').post((req, res) => {
 });
 
 router.route('/testimonials/:id').put((req, res) => {
-  for (let i = 0; i < db.testimonials.length; i++) {
-    const item = db.testimonials[i];
-    if (item.id == req.params.id) {
-      const newItem = { id: item.id, author: req.body.author, text: req.body.text };
-      db.testimonials[i] = newItem;
-      break;
+  db.testimonials = db.testimonials.map(testimonial => {
+    if (testimonial.id == req.params.id) {
+      return newTestimonial = {
+        id: testimonial.id,
+        author: req.body.author,
+        text: req.body.text
+      }
+    } else {
+      return testimonial;
     }
-  }
+  });
   res.json({ message: 'OK' });
 });
 

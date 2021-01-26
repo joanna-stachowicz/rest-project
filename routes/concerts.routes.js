@@ -9,14 +9,12 @@ router.route('/concerts').get((req, res) => {
 });
 
 router.route('/concerts/:id').get((req, res) => {
-  for (let i = 0; i < db.concerts.length; i++) {
-    const item = db.concerts[i];
-    if (item.id == req.params.id) {
-      res.json(item);
-      break;
-    }
+  const result = db.concerts.filter(concert => concert.id == req.paramms.id);
+  if (result.length === 0) {
+    res.json({});
+  } else {
+    res.json(result[0]);
   }
-  res.json({});
 });
 
 router.route('/concerts').post((req, res) => {
@@ -34,21 +32,20 @@ router.route('/concerts').post((req, res) => {
 });
 
 router.route('/concerts/:id').put((req, res) => {
-  for (let i = 0; i < db.concerts.length; i++) {
-    const item = db.concerts[i];
-    if (item.id == req.params.id) {
-      const newItem = {
-        id: item.id,
+  db.concerts = db.concerts.map(concert => {
+    if (concert.id == req.params.id) {
+      return newConcert = {
+        id: concert.id,
         performer: req.body.performer,
         genre: req.body.genre,
         price: req.body.price,
         day: req.body.day,
         image: req.body.image
-      };
-      db.concerts[i] = newItem;
-      break;
+      }
+    } else {
+      return concert;
     }
-  }
+  });
   res.json({ message: 'OK' });
 });
 

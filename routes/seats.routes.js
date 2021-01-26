@@ -9,44 +9,54 @@ router.route('/seats').get((req, res) => {
 });
 
 router.route('/seats/:id').get((req, res) => {
-  for (let i = 0; i < db.seats.length; i++) {
-    const item = db.seats[i];
-    if (item.id == req.params.id) {
-      res.json(item);
-      break;
-    }
+  const result = db.seats.filter(seat => seat.id == req.params.id);
+  if (result.length === 0) {
+    res.json({});
+  } else {
+    res.json(result[0]);
   }
-  res.json({});
 });
 
 router.route('/seats').post((req, res) => {
   const randomId = Math.floor(Math.random() * 9999);
-  const item = {
+  const newSeat = {
     id: randomId,
     day: req.body.day,
     seat: req.body.seat,
     client: req.body.client,
     email: req.body.email
   };
-  db.seats.push(item);
-  res.json({ message: 'OK' });
+
+  const isTaken = db.seats.some((seat) => {
+    if (seat.day == newSeat.day && seat.seat == newSeat.seat) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
+  if (isTaken) {
+    res.status(409).json({ message: "The slot is already taken..." });
+  } else {
+    db.seats.push(newSeat);
+    res.json({ message: 'OK' });
+  }
 });
 
 router.route('/seats/:id').put((req, res) => {
-  for (let i = 0; i < db.seats.length; i++) {
-    const item = db.seats[i];
-    if (item.id == req.params.id) {
-      const newItem = {
-        id: item.id,
+  db.seats = db.seats.map(seat => {
+    if (seat.id == req.params.id) {
+      return newSeat = {
+        id: seat.id,
         day: req.body.day,
         seat: req.body.seat,
         client: req.body.client,
         email: req.body.email
-      };
-      db.seats[i] = newItem;
-      break;
+      }
+    } else {
+      return seat;
     }
-  }
+  });
   res.json({ message: 'OK' });
 });
 
