@@ -5,7 +5,7 @@ const socket = require('socket.io');
 const mongoose = require('mongoose');
 
 // connects our backend code with the database
-mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://joanna-stachowicz:Asiulka2!@cluster0.omdbr.mongodb.net/atlasproject?retryWrites=true&w=majority', { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
