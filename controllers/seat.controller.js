@@ -35,6 +35,7 @@ exports.addAll = async (req, res) => {
       const newSeat = new Seat(item);
       await newSeat.save();
       res.json({ message: 'OK' });
+      req.io.emit('seatsUpdated');
     }
   } catch (err) {
     res.status(500).json({ message: err });
