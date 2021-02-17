@@ -1,4 +1,5 @@
 const Testimonial = require('../models/testimonial.model');
+const sanitize = require('mongo-sanitize');
 
 exports.getAll = async (req, res) => {
   try {
@@ -38,9 +39,10 @@ exports.getOne = async (req, res) => {
 
 exports.addAll = async (req, res) => {
   try {
-    const tes = await (Testimonial.findById(req.params.id));
+    const cleanId = sanitize(req.params.id);
+    const tes = await (Testimonial.findById(cleanId));
     if (tes) {
-      await Testimonial.deleteOne({ _id: req.params.id });
+      await Testimonial.deleteOne({ _id: cleanId });
       res.json(tes);
     }
     else res.status(404).json({ message: 'Not found...' });

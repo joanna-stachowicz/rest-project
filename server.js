@@ -3,6 +3,7 @@ const cors = require('cors');
 const path = require('path');
 const socket = require('socket.io');
 const mongoose = require('mongoose');
+const helmet = require('helmet');
 
 // connects our backend code with the database
 // mongoose.connect('mongodb+srv://joanna-stachowicz:Asiulka2%21@cluster0.omdbr.mongodb.net', { dbName: 'FestivalDB' });
@@ -36,6 +37,8 @@ app.use('/api', seatsRoutes);
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '/client/build')));
+
+app.use(helmet());
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/client/build/index.html'));
